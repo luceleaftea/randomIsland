@@ -38,8 +38,26 @@ def convertPerlinToColor(perlin):
     floatColor = (perlin + 1) / 2.0 * 255
     return round(floatColor)
 
-sizeX = 500
-sizeY = 500
+def biome(e):
+
+    WATER = (62, 96, 193)
+    BEACH = (93, 128, 252)
+    FOREST = (116, 169, 99)
+    JUNGLE = (62, 126, 98)
+    SAVANNAH = (165, 189, 126)
+    DESERT = (191, 210, 175)
+    SNOW = (210, 210, 215)
+
+    if (e < 0.1): return WATER
+    if (e < 0.2): return BEACH
+    if (e < 0.3): return FOREST
+    if (e < 0.5): return JUNGLE
+    if (e < 0.7): return SAVANNAH
+    if (e < 0.9): return DESERT
+    return SNOW
+
+sizeX = 800
+sizeY = 800
 squareSize = 1
 mapArray = []
 
@@ -59,9 +77,16 @@ for y in range(sizeY):
     for x in range(sizeX):
         nx = x/sizeX - (sizeX / 2.0)
         ny = y/sizeY - (sizeY / 2.0)
-        randNoise = noise.snoise3(1 * nx, 1 * ny, 1 * nz)
-        randNoise += .5 * noise.snoise3(2 * nx, 2 * ny, 2 * nz)
-        randNoise += .25 * noise.snoise3(4 * nx, 2 * ny, 2 * nz)
+        randNoise = noise.snoise3(1 * nx, 1 * ny, 1 * nz, 1)
+        randNoise += .5 * noise.snoise3(2 * nx, 2 * ny, 2 * nz, 2)
+        randNoise += .25 * noise.snoise3(4 * nx, 2 * ny, 2 * nz, 4)
+
+        # Redistribution (force
+        randNoise = pow(randNoise, 1.3)
+        if type(randNoise) == complex:
+            randNoise = randNoise.real
+
+
         # print(randNoise)
         row.append(randNoise)
     mapArray.append(row)
@@ -86,9 +111,18 @@ clock = pygame.time.Clock()
 
 for y in range(sizeY):
     for x in range(sizeX):
-        color = convertPerlinToColor(mapArray[y][x])
+        # color = convertPerlinToColor(mapArray[y][x])
+        color = biome(mapArray[y][x])
         # print(color)
-        pygame.draw.rect(screen, (color, color, color), [x * squareSize, y * squareSize, squareSize, squareSize])
+        # r = mapNumberToRange(color, 0, 255, 0, 255)
+        # g = 255
+        # b = mapNumberToRange(color, 0, 255, 29, 255)
+
+        r = color[0]
+        g = color[1]
+        b = color[2]
+
+        pygame.draw.rect(screen, (r, g, b), [x * squareSize, y * squareSize, squareSize, squareSize])
 
 pygame.display.flip()
 
