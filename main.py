@@ -56,10 +56,16 @@ def biome(e):
     if (e < 0.9): return DESERT
     return SNOW
 
+def stretchValue(num, power):
+    num = pow(num, power)
+    if type(num) == complex:
+        num = num.real
+    return num
+
 sizeX = 800
 sizeY = 800
 squareSize = 1
-mapArray = []
+elevation = []
 
 # print(mapArray)
 
@@ -71,6 +77,7 @@ nz = random.random()
 
 octaves = 4
 freq = 1.0
+redistribPower = .3
 
 for y in range(sizeY):
     row = []
@@ -81,19 +88,17 @@ for y in range(sizeY):
         randNoise += .5 * noise.snoise3(2 * nx, 2 * ny, 2 * nz, 2)
         randNoise += .25 * noise.snoise3(4 * nx, 2 * ny, 2 * nz, 4)
 
-        # Redistribution (force
-        randNoise = pow(randNoise, 1.3)
-        if type(randNoise) == complex:
-            randNoise = randNoise.real
+        # Redistribution
+        randNoise = stretchValue(randNoise, redistribPower)
 
 
         # print(randNoise)
         row.append(randNoise)
-    mapArray.append(row)
+    elevation.append(row)
 
 # print(mapArray)
 
-mapArray = normalizeMapArray(mapArray)
+elevation = normalizeMapArray(elevation)
 
 # print(mapArray)
 
@@ -112,7 +117,7 @@ clock = pygame.time.Clock()
 for y in range(sizeY):
     for x in range(sizeX):
         # color = convertPerlinToColor(mapArray[y][x])
-        color = biome(mapArray[y][x])
+        color = biome(elevation[y][x])
         # print(color)
         # r = mapNumberToRange(color, 0, 255, 0, 255)
         # g = 255
