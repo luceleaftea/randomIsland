@@ -1,66 +1,5 @@
-import noise
-import pygame
-import random
-
-def getMaxMinOfMapArray(mapArray):
-    maxNum = 0.0
-    minNum = 0.0
-
-    for y in mapArray:
-        for x in y:
-            if x > maxNum:
-                maxNum = x
-            if x < minNum:
-                minNum = x
-
-    return [minNum, maxNum]
-
-def mapNumberToRange(num, startMin, startMax, endMin, endMax):
-    # print(num - startMin, startMax - num, endMax - endMin)
-    return (num - startMin) / (startMax - startMin) * (endMax - endMin) + endMin
-
-def normalizeMapArray(mapArray):
-    maxAndMin = getMaxMinOfMapArray(mapArray)
-    startMin = maxAndMin[0]
-    startMax = maxAndMin[1]
-    newMapArray = []
-    for y in mapArray:
-        newMapArray.append(list(map(lambda x: mapNumberToRange(x, startMin, startMax, -1.0, 1.0), y)))
-
-    # for y in range(len(mapArray)):
-    #     for x in range(len(mapArray[y])):
-    #         print(mapArray[y][x], newMapArray[y][x])
-
-    return newMapArray
-
-# Assumes noise numbers are on a range of -1.0 to 1.0
-def convertPerlinToColor(perlin):
-    floatColor = (perlin + 1) / 2.0 * 255
-    return round(floatColor)
-
-def biome(e):
-
-    WATER = (62, 96, 193)
-    BEACH = (93, 128, 252)
-    FOREST = (116, 169, 99)
-    JUNGLE = (62, 126, 98)
-    SAVANNAH = (165, 189, 126)
-    DESERT = (191, 210, 175)
-    SNOW = (210, 210, 215)
-
-    if (e < 0.1): return WATER
-    if (e < 0.2): return BEACH
-    if (e < 0.3): return FOREST
-    if (e < 0.5): return JUNGLE
-    if (e < 0.7): return SAVANNAH
-    if (e < 0.9): return DESERT
-    return SNOW
-
-def stretchValue(num, power):
-    num = pow(num, power)
-    if type(num) == complex:
-        num = num.real
-    return num
+import noise, pygame, random, datetime
+import generation, display
 
 sizeX = 800
 sizeY = 800
@@ -69,7 +8,7 @@ elevation = []
 
 # print(mapArray)
 
-random.seed()
+random.seed(datetime.datetime.now())
 
 # Generate perlin noise
 
@@ -89,7 +28,7 @@ for y in range(sizeY):
         randNoise += .25 * noise.snoise3(4 * nx, 2 * ny, 2 * nz, 4)
 
         # Redistribution
-        randNoise = stretchValue(randNoise, redistribPower)
+        randNoise = generation.stretchValue(randNoise, redistribPower)
 
 
         # print(randNoise)
@@ -98,7 +37,7 @@ for y in range(sizeY):
 
 # print(mapArray)
 
-elevation = normalizeMapArray(elevation)
+elevation = generation.normalizeMapArray(elevation)
 
 # print(mapArray)
 
@@ -117,7 +56,7 @@ clock = pygame.time.Clock()
 for y in range(sizeY):
     for x in range(sizeX):
         # color = convertPerlinToColor(mapArray[y][x])
-        color = biome(elevation[y][x])
+        color = display.biome(elevation[y][x])
         # print(color)
         # r = mapNumberToRange(color, 0, 255, 0, 255)
         # g = 255
