@@ -1,8 +1,9 @@
-def getMaxMinOfMapArray(mapArray):
+# Loops through 2D array and returns the min and max values within it
+def getMaxMinOf2DArray(array):
     maxNum = 0.0
     minNum = 0.0
 
-    for y in mapArray:
+    for y in array:
         for x in y:
             if x > maxNum:
                 maxNum = x
@@ -11,24 +12,22 @@ def getMaxMinOfMapArray(mapArray):
 
     return [minNum, maxNum]
 
+# maps a certain number from one range to another
 def mapNumberToRange(num, startMin, startMax, endMin, endMax):
-    # print(num - startMin, startMax - num, endMax - endMin)
     return (num - startMin) / (startMax - startMin) * (endMax - endMin) + endMin
 
-def normalizeMapArray(mapArray):
-    maxAndMin = getMaxMinOfMapArray(mapArray)
+# Takes a 2D array and normalizes all values in it to the specified range
+def normalize2DArray(array, endMin, endMax):
+    maxAndMin = getMaxMinOf2DArray(array)
     startMin = maxAndMin[0]
     startMax = maxAndMin[1]
-    newMapArray = []
-    for y in mapArray:
-        newMapArray.append(list(map(lambda x: mapNumberToRange(x, startMin, startMax, -1.0, 1.0), y)))
+    newArray = []
+    for y in array:
+        newArray.append(list(map(lambda x: mapNumberToRange(x, startMin, startMax, endMin, endMax), y)))
 
-    # for y in range(len(mapArray)):
-    #     for x in range(len(mapArray[y])):
-    #         print(mapArray[y][x], newMapArray[y][x])
+    return newArray
 
-    return newMapArray
-
+# Raise the noise value by the specified power (returns real portion of complex numbers)
 def stretchValue(num, power):
     num = pow(num, power)
     if type(num) == complex:

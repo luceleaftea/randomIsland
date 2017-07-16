@@ -1,17 +1,15 @@
 import noise, pygame, random, datetime
 import generation, display
 
+# Initialize global variables and seed the random number generator
 sizeX = 800
 sizeY = 800
 squareSize = 1
 elevation = []
 
-# print(mapArray)
-
 random.seed(datetime.datetime.now())
 
 # Generate perlin noise
-
 nz = random.random()
 
 octaves = 4
@@ -30,17 +28,10 @@ for y in range(sizeY):
         # Redistribution
         randNoise = generation.stretchValue(randNoise, redistribPower)
 
-
-        # print(randNoise)
         row.append(randNoise)
     elevation.append(row)
 
-# print(mapArray)
-
-elevation = generation.normalizeMapArray(elevation)
-
-# print(mapArray)
-
+elevation = generation.normalize2DArray(elevation, -1.0, 1.0)
 
 # Set up pygame for display
 pygame.init()
@@ -51,20 +42,9 @@ done = False
 clock = pygame.time.Clock()
 
 # Draw the perlin noise to the screen
-# screen.fill((255, 255, 255))
-
 for y in range(sizeY):
     for x in range(sizeX):
-        # color = convertPerlinToColor(mapArray[y][x])
-        color = display.biome(elevation[y][x])
-        # print(color)
-        # r = mapNumberToRange(color, 0, 255, 0, 255)
-        # g = 255
-        # b = mapNumberToRange(color, 0, 255, 29, 255)
-
-        r = color[0]
-        g = color[1]
-        b = color[2]
+        r, g, b = display.biomeColoring(elevation[y][x])
 
         pygame.draw.rect(screen, (r, g, b), [x * squareSize, y * squareSize, squareSize, squareSize])
 
