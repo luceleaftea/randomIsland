@@ -26,6 +26,50 @@ def biomeColoring(noiseNum):
     if (noiseNum < 0.9): return DESERT
     return SNOW
 
+
+def biomeMoistureColoring(e, m):
+    OCEAN = (68, 68, 122)
+    BEACH = (160, 144, 119)
+    SCORCHED = (85, 85, 85)
+    BARE = (136, 136, 136)
+    TUNDRA = (187, 187, 170)
+    SNOW = (221, 221, 228)
+    TEMPERATE_DESERT = (201, 210, 155)
+    SHRUBLAND = (136, 153, 119)
+    TAIGA = (153, 170, 119)
+    GRASSLAND = (136, 170, 85)
+    TEMPERATE_DECIDUOUS_FOREST = (103, 148, 89)
+    TEMPERATE_RAIN_FOREST = (68, 136, 85)
+    SUBTROPICAL_DESERT = (210, 185, 139)
+    TROPICAL_SEASONAL_FOREST = (85, 153, 68)
+    TROPICAL_RAIN_FOREST = (51, 119, 85)
+
+
+    if (e < 0.1): return OCEAN
+    if (e < 0.12): return BEACH
+
+    if (e > 0.8):
+        if (m < 0.1): return SCORCHED
+        if (m < 0.2): return BARE
+        if (m < 0.5): return TUNDRA
+        return SNOW;
+
+    if (e > 0.6):
+        if (m < 0.33): return TEMPERATE_DESERT
+        if (m < 0.66): return SHRUBLAND
+        return TAIGA
+
+    if (e > 0.3):
+        if (m < 0.16): return TEMPERATE_DESERT
+        if (m < 0.50): return GRASSLAND
+        if (m < 0.83): return TEMPERATE_DECIDUOUS_FOREST
+        return TEMPERATE_RAIN_FOREST
+
+    if (m < 0.16): return SUBTROPICAL_DESERT
+    if (m < 0.33): return GRASSLAND
+    if (m < 0.66): return TROPICAL_SEASONAL_FOREST
+    return TROPICAL_RAIN_FOREST
+
 # Converts a noise value into 3 values representing RGB
 def grayscaleColoring(noiseNum):
     color = convertNoiseToColor(noiseNum)
