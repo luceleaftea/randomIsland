@@ -1,3 +1,4 @@
+import pygame, base64, io
 import generation
 
 # Converts noise values to a RGB scale (0-255)
@@ -77,3 +78,59 @@ def grayscaleColoring(noiseNum):
     g = 255
     b = generation.mapNumberToRange(color, 0, 255, 29, 255)
     return (r, g, b)
+
+def pygameDisplay(sizeX, sizeY, squareSize, elevation, moisture):
+    # Set up pygame for display
+    pygame.init()
+    screen = pygame.display.set_mode([sizeX * squareSize, sizeY * squareSize])
+    pygame.display.set_caption("Random Islands")
+
+    done = False
+    clock = pygame.time.Clock()
+
+    # Draw the map to the screen
+    for y in range(sizeY):
+        for x in range(sizeX):
+            r, g, b = biomeMoistureColoring(elevation[y][x], moisture[y][x])
+            # r, g, b = biomeColoring(elevation[y][x])
+
+            pygame.draw.rect(screen, (r, g, b), [x * squareSize, y * squareSize, squareSize, squareSize])
+
+    pygame.display.flip()
+
+    # Wait for user to exit
+    while not done:
+        clock.tick(10)
+
+        for event in pygame.event.get():  # User did something
+            if event.type == pygame.QUIT:  # If user clicked close
+                done = True  # Flag that we are done so we exit this loop
+
+    pygame.quit()
+
+def pygameOutputImage(sizeX, sizeY, squareSize):
+    elevation, moisture = generation.generateElevationMoisture(sizeX, sizeY)
+
+    # Set up pygame for display
+    pygame.init()
+    screen = pygame.display.set_mode([sizeX * squareSize, sizeY * squareSize])
+    pygame.display.set_caption("Random Islands")
+
+    done = False
+    clock = pygame.time.Clock()
+
+    # Draw the map to the screen
+    for y in range(sizeY):
+        for x in range(sizeX):
+            r, g, b = biomeMoistureColoring(elevation[y][x], moisture[y][x])
+            # r, g, b = biomeColoring(elevation[y][x])
+
+            pygame.draw.rect(screen, (r, g, b), [x * squareSize, y * squareSize, squareSize, squareSize])
+
+    pygame.display.flip()
+
+    data = io.StringIO()
+    pygame.image.save(pygame.display.get_surface(), data)
+    base64data = base64.b64encode(data.getvalue())
+
+    return base64data
