@@ -1,4 +1,4 @@
-import noise, pygame, random, datetime
+import random, datetime
 import generation, display
 
 # Initialize global variables and seed the random number generator

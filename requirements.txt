@@ -1,0 +1,4 @@
+flask=0.12.2
+noise=1.2.2
+Pillow=4.3.0
+pygame=1.9.3

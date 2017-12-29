@@ -1,7 +1,6 @@
 from os import environ
 from flask import *
 import display
-import base64
 
 app = Flask(__name__)
 
