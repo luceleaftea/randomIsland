@@ -91,6 +91,7 @@ def pygameDisplay(sizeX, sizeY, squareSize, elevation, moisture):
     clock = pygame.time.Clock()
 
     # Draw the map to the screen
+    #TODO: Break this out into its own function
     for y in range(sizeY):
         for x in range(sizeX):
             r, g, b = biomeMoistureColoring(elevation[y][x], moisture[y][x])
@@ -122,6 +123,7 @@ def pygameOutputImage(sizeX, sizeY, squareSize):
     clock = pygame.time.Clock()
 
     # Draw the map to the screen
+    # TODO: Break this out into its own function
     for y in range(sizeY):
         for x in range(sizeX):
             r, g, b = biomeMoistureColoring(elevation[y][x], moisture[y][x])
@@ -141,3 +143,21 @@ def pygameOutputImage(sizeX, sizeY, squareSize):
     pygame.quit()
 
     return base64data
+
+def generateColorMapForHTMLCanvas(sizeX, sizeY):
+    elevation, moisture = generation.generateElevationMoisture(sizeX, sizeY)
+
+    colorMap = []
+
+    # Draw the map to the screen
+    for y in range(sizeY):
+        row = []
+        for x in range(sizeX):
+            r, g, b = biomeMoistureColoring(elevation[y][x], moisture[y][x])
+            # r, g, b = biomeColoring(elevation[y][x])
+
+            row.append([r, g, b])
+
+        colorMap.append(row)
+
+    return colorMap

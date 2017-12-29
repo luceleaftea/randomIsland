@@ -5,6 +5,23 @@
     <title>Random Islands</title>
 </head>
 <body>
-    <img src="data:;base64,{{imageString}}">
+    <canvas id="islandCanvas" width="800" height="800"></canvas>
+
+    <script>
+        var canvas = document.getElementById("islandCanvas");
+        var ctx = canvas.getContext("2d");
+
+        var colorMap = {{colorMap}}
+
+        console.log(colorMap)
+
+        for(var y = 0; y < colorMap.length; y++) {
+            for(var x = 0; x < colorMap[y].length; x++) {
+                var rgbArray = colorMap[y][x]
+                ctx.fillStyle = "rgb("+rgbArray[0]+", "+rgbArray[1]+", "+rgbArray[2]+")"
+                ctx.fillRect(x, y, 1, 1)
+            }
+        }
+    </script>
 </body>
 </html>
