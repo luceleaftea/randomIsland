@@ -1,5 +1,7 @@
-import pygame, base64, io
+import pygame, base64
+from io import BytesIO
 import generation
+from PIL import Image
 
 # Converts noise values to a RGB scale (0-255)
 # Assumes noise values are on a range of -1.0 to 1.0
@@ -129,8 +131,13 @@ def pygameOutputImage(sizeX, sizeY, squareSize):
 
     pygame.display.flip()
 
-    data = io.StringIO()
-    pygame.image.save(pygame.display.get_surface(), data)
-    base64data = base64.b64encode(data.getvalue())
+    # data = io.StringIO()
+    data = pygame.image.tostring(pygame.display.get_surface(), 'RGB')
+    img = Image.frombytes('RGB', (sizeX, sizeY), data)
+    tempData = BytesIO()
+    img.save(tempData, 'JPEG')
+    base64data = base64.b64encode(tempData.getvalue()).decode('utf-8')
+
+    pygame.quit()
 
     return base64data
