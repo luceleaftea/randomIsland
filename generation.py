@@ -1,6 +1,6 @@
 import random, noise
 import generation
-from multiprocessing import Pool, TimeoutError
+from multiprocessing import Pool
 
 # Loops through 2D array and returns the min and max values within it
 def getMaxMinOf2DArray(array):

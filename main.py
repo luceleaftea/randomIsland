@@ -1,4 +1,4 @@
-import random, datetime, timeit
+import random, datetime
 import generation, display
 
 # Initialize global variables and seed the random number generator
