@@ -61,6 +61,7 @@ def generateElevationMoisture(sizeX, sizeY):
 
     with Pool(processes=4) as pool:
         for y in range(sizeY):
+            # TODO: look into optimizing per this tweet https://twitter.com/ohnobinki/status/946953134122897408
             elevation.append(pool.starmap(generateNoiseValue, [(nz, sizeX, sizeY, x, y, redistribPower) for x in range(sizeX)]))
 
     pool.close()
@@ -77,6 +78,7 @@ def generateElevationMoisture(sizeX, sizeY):
 
     with Pool(processes=4) as pool:
         for y in range(sizeY):
+            # TODO: look into optimizing per this tweet https://twitter.com/ohnobinki/status/946953134122897408
             moisture.append(pool.starmap(generateNoiseValue, [(nz, sizeX, sizeY, x, y, redistribPower) for x in range(sizeX)]))
 
     pool.close()
