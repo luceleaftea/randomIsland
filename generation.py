@@ -22,12 +22,11 @@ def mapNumberToRange(num, startMin, startMax, endMin, endMax):
 
 # Takes a 2D array and normalizes all values in it to the specified range
 def normalize2DArray(array, endMin, endMax):
-    maxAndMin = getMaxMinOf2DArray(array)
-    startMin = maxAndMin[0]
-    startMax = maxAndMin[1]
+    startMin, startMax = getMaxMinOf2DArray(array)
+
     newArray = []
     for y in array:
-        newArray.append(list(map(lambda x: mapNumberToRange(x, startMin, startMax, endMin, endMax), y)))
+        newArray.append(list(map(lambda x: mapNumberToRange(x, startMin, startMax, endMin, endMax), y))) #TODO: See if this could be optimized
 
     return newArray
 
@@ -62,7 +61,7 @@ def generateElevationMoisture(sizeX, sizeY):
 
     with Pool(processes=4) as pool:
         for y in range(sizeY):
-            elevation.append(pool.starmap(generateNoiseValue, [(lambda x: (nz, sizeX, sizeY, x, y, redistribPower))(x) for x in range(sizeX)]))
+            elevation.append(pool.starmap(generateNoiseValue, [(nz, sizeX, sizeY, x, y, redistribPower) for x in range(sizeX)]))
 
     pool.close()
     pool.join()
@@ -78,7 +77,7 @@ def generateElevationMoisture(sizeX, sizeY):
 
     with Pool(processes=4) as pool:
         for y in range(sizeY):
-            moisture.append(pool.starmap(generateNoiseValue, [(lambda x: (nz, sizeX, sizeY, x, y, redistribPower))(x) for x in range(sizeX)]))
+            moisture.append(pool.starmap(generateNoiseValue, [(nz, sizeX, sizeY, x, y, redistribPower) for x in range(sizeX)]))
 
     pool.close()
     pool.join()
